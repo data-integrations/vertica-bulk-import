@@ -22,11 +22,11 @@ Deployment
 ----------
 You can deploy your plugins using the CDAP CLI:
 
-    > load artifact <target/vertica-db-plugins-<version>.jar config-file <target/vertica-db-plugins-<version>.json>
+    > load artifact <target/vertica-bulk-load-<version>.jar config-file <target/vertica-bulk-load-<version>.json>
 
-For example, if your artifact is named 'vertica-db-plugins-<version>':
+For example, if your artifact is named 'vertica-bulk-load-<version>':
 
-    > load artifact target/vertica-db-plugins-<version>.jar config-file target/vertica-db-plugins-<version>.json
+    > load artifact target/vertica-bulk-load-<version>.jar config-file target/vertica-bulk-load-<version>.json
     
 ## Mailing Lists
 
