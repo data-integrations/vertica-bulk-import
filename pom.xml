@@ -6,7 +6,7 @@
 
   <groupId>co.cask.hydrator</groupId>
   <artifactId>vertica-db-plugins</artifactId>
-  <version>1.1.0-8.0.2</version>
+  <version>1.0.0-8.0.2</version>
 
   <licenses>
     <license>
