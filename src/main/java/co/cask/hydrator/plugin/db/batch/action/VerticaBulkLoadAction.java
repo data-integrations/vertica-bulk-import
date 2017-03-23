@@ -123,12 +123,18 @@ public class VerticaBulkLoadAction extends Action {
   }
 
   /**
-   *
+   * Vertica config
    */
   public class VerticaConfig extends PluginConfig {
     public static final String CONNECTION_STRING = "connectionString";
     public static final String USER = "user";
     public static final String PASSWORD = "password";
+    public static final String COPYSTATEMENT = "copyStatement";
+    public static final String PATH = "path";
+
+    public VerticaConfig() {
+      super();
+    }
 
     @Name(CONNECTION_STRING)
     @Description("JDBC connection string including database name.")
@@ -149,21 +155,17 @@ public class VerticaBulkLoadAction extends Action {
     @Macro
     public String password;
 
-    @Name("copyStatement")
-    @Description("Copy statement for vertica to bulk load. This query must use the COPY statement to load data from " +
+    @Name(COPYSTATEMENT)
+    @Description("Copy statement to bulk load into vertica. This query must use the COPY statement to load data from " +
       "STDIN. Unlike copying from a file on the host, you do not need superuser privileges to copy a stream. All " +
       "your user account needs is INSERT privileges on the target table.")
     @Macro
     public String copyStatement;
 
-    @Name("path")
-    @Description("File dir from where the files needs to be loaded.")
+    @Name(PATH)
+    @Description("File directory path from where all the file need to be loaded to vertica.")
     @Macro
     public String path;
-
-    public VerticaConfig() {
-      super();
-    }
 
   }
 }
