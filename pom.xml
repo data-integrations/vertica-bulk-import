@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>co.cask.hydrator</groupId>
-  <artifactId>vertica-db-plugins</artifactId>
+  <artifactId>vertica-bulk-load</artifactId>
   <version>1.0.0-8.0.2</version>
 
   <licenses>
@@ -25,13 +25,6 @@
       <organizationUrl>http://www.cdap.io</organizationUrl>
     </developer>
   </developers>
-
-  <scm>
-    <connection>scm:https://github.com/hydrator/tokenizer-analytics.git</connection>
-    <developerConnection>scm:git:git@github.com:hydrator/tokenizer-analytics.git</developerConnection>
-    <url>https://github.com/hydrator/tokenizer-analytics.git</url>
-    <tag>HEAD</tag>
-  </scm>
 
   <issueManagement>
     <url>https://issues.cask.co/browse/HYDRATOR</url>

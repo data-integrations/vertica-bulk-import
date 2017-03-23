@@ -1,11 +1,29 @@
-Vertica Bulk Load
-=================
+[![Build Status](https://travis-ci.org/hydrator/vertica-db-plugins.svg?branch=master)](https://travis-ci.org/hydrator/vertica-db-plugins) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-<a href="https://cdap-users.herokuapp.com/"><img alt="Join CDAP community" src="https://cdap-users.herokuapp.com/badge.svg?t=vertica-db-plugins"/></a> [![Build Status](https://travis-ci.org/hydrator/vertica-db-plugins.svg?branch=master)](https://travis-ci.org/hydrator/vertica-db-plugins) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) <img alt="CDAP Action" src="https://cdap-users.herokuapp.com/assets/cdap-action.svg"/> []() <img src="https://cdap-users.herokuapp.com/assets/cm-available.svg"/>
+Vertica Bulk Load Action
+========================
 
-CDAP Plugin to bulk load data into vertica database. Plugins can be configured for batch pipelines.
+CDAP Plugin for bulk loading into Vertica Database. 
 
-* [VerticaBulkLoad Action](docs/VERTICA-BULK-LOAD-ACTION.md)
+<img align="center" src="plugin-vertica-bulk-load.png"  width="400" alt="plugin configuration" />
+
+
+Usage Notes
+-----------
+
+This plugin is configured to go through all the files inside directory and do bulk load into vertica database.
+
+Plugin Configuration
+---------------------
+
+| Configuration | Required | Default | Description |
+| :------------ | :------: | :----- | :---------- |
+| **user** | **N** | N/A | This configuration specifies user name for vertica database
+| **password** | **N** | N/A | This configuration specifies password for vertica database
+| **copyStatement** | **Y** | N/A | This configuration specifies copy statement for vertica database
+| **path** | **Y** | N/A | This configuration provides directory which has all the files to be loaded to vertica database
+| **connectionString** | **Y** | N/A | This configuration provides connection string for vertica database
+
 
 Build
 -----
@@ -61,4 +79,4 @@ and limitations under the License.
 Cask is a trademark of Cask Data, Inc. All rights reserved.
 
 Apache, Apache HBase, and HBase are trademarks of The Apache Software Foundation. Used with
-permission. No endorsement by The Apache Software Foundation is implied by the use of these marks.  
+permission. No endorsement by The Apache Software Foundation is implied by the use of these marks.    
