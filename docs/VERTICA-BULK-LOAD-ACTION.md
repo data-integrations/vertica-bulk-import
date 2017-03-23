@@ -18,11 +18,11 @@ Plugin Configuration
 
 | Configuration | Required | Default | Description |
 | :------------ | :------: | :----- | :---------- |
-| **user** | **N** | N/A | This configuration specifies user name for vertica database
-| **password** | **N** | N/A | This configuration specifies password for vertica database
-| **copyStatement** | **Y** | N/A | This configuration specifies copy statement for vertica database
-| **path** | **Y** | N/A | This configuration provides directory which has all the files to be loaded to vertica database
-| **connectionString** | **Y** | N/A | This configuration provides connection string for vertica database
+| **Username** | **N** | N/A | This configuration specifies user name for vertica database |
+| **Password** | **N** | N/A | This configuration specifies password for vertica database |
+| **Copy Statement** | **Y** | N/A | This configuration specifies copy statement for vertica database |
+| **Path** | **Y** | N/A | This configuration provides directory which has all the files to be loaded to vertica database |
+| **Connection String** | **Y** | N/A | This configuration provides connection string for vertica database |
 
 
 Build
