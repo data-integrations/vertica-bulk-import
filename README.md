@@ -1,7 +1,7 @@
 Vertica Bulk Load
 =================
 
-<a href="https://cdap-users.herokuapp.com/"><img alt="Join CDAP community" src="https://cdap-users.herokuapp.com/badge.svg?t=vertica-db-plugins"/></a> [![Build Status](https://travis-ci.org/hydrator/vertica-db-plugins.svg?branch=master)](https://travis-ci.org/hydrator/vertica-db-plugins) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) <img alt="CDAP Action" src="https://cdap-users.herokuapp.com/assets/cdap-action.svg"/> []() <img src="https://cdap-users.herokuapp.com/assets/cm-available.svg"/>
+<a href="https://cdap-users.herokuapp.com/"><img alt="Join CDAP community" src="https://cdap-users.herokuapp.com/badge.svg?t=vertica-bulk-load"/></a> [![Build Status](https://travis-ci.org/hydrator/vertica-db-plugins.svg?branch=master)](https://travis-ci.org/hydrator/vertica-db-plugins) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) <img alt="CDAP Action" src="https://cdap-users.herokuapp.com/assets/cdap-action.svg"/> []() <img src="https://cdap-users.herokuapp.com/assets/cm-available.svg"/>
 
 CDAP Plugin to bulk load data into vertica database. Plugins can be configured for batch pipelines.
 
@@ -22,11 +22,11 @@ Deployment
 ----------
 You can deploy your plugins using the CDAP CLI:
 
-    > load artifact <target/vertica-db-plugins-<version>.jar config-file <target/vertica-db-plugins-<version>.json>
+    > load artifact <target/vertica-bulk-load-<version>.jar config-file <target/vertica-bulk-load-<version>.json>
 
-For example, if your artifact is named 'vertica-db-plugins-<version>':
+For example, if your artifact is named 'vertica-bulk-load-<version>':
 
-    > load artifact target/vertica-db-plugins-<version>.jar config-file target/vertica-db-plugins-<version>.json
+    > load artifact target/vertica-bulk-load-<version>.jar config-file target/vertica-bulk-load-<version>.json
     
 ## Mailing Lists
 
