@@ -5,7 +5,7 @@ Vertica Bulk Load
 
 CDAP Plugin to bulk load data into vertica database. Plugins can be configured for batch pipelines.
 
-* [VerticaBulkLoad Action](docs/VERTICA-BULK-LOAD-ACTION.md)
+* [VerticaBulkLoad Action](docs/VERTICADB-BULK-LOAD-ACTION.md)
 
 Build
 -----
