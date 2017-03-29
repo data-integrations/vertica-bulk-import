@@ -221,8 +221,8 @@ public class VerticaBulkLoadAction extends Action {
     public String password;
 
     @Name(LEVEL)
-    @Description("Copy statement query level. Basic only creates copy statement with tableName, delimiter and " +
-      "enforcement. To use more options please choose Advanced option.")
+    @Description("Copy statement query level. Basic automatically creates copy statement with tableName and delimiter. " +
+      "To use more options please choose Advanced option.")
     @Macro
     public String level;
 

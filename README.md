@@ -1,11 +1,33 @@
 Vertica Bulk Load
 =================
 
-<a href="https://cdap-users.herokuapp.com/"><img alt="Join CDAP community" src="https://cdap-users.herokuapp.com/badge.svg?t=vertica-bulk-load"/></a> [![Build Status](https://travis-ci.org/hydrator/vertica-db-plugins.svg?branch=master)](https://travis-ci.org/hydrator/vertica-db-plugins) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) <img alt="CDAP Action" src="https://cdap-users.herokuapp.com/assets/cdap-action.svg"/> []() <img src="https://cdap-users.herokuapp.com/assets/cm-available.svg"/>
+<a href="https://cdap-users.herokuapp.com/"><img alt="Join CDAP community" src="https://cdap-users.herokuapp.com/badge.svg?t=vertica-bulk-load"/></a> [![Build Status](https://travis-ci.org/hydrator/vertica-bulk-load.svg?branch=master)](https://travis-ci.org/hydrator/vertica-bulk-load) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) <img alt="CDAP Action" src="https://cdap-users.herokuapp.com/assets/cdap-action.svg"/> []() <img src="https://cdap-users.herokuapp.com/assets/cm-available.svg"/>
 
-CDAP Plugin to bulk load data into vertica database. Plugins can be configured for batch pipelines.
+Vertica Bulk Load Action plugin gets executed after successful mapreduce or spark job. It reads all the files in a given directory and bulk loads all the data from those files into vertica table. 
 
-* [VerticaBulkLoad Action](docs/VERTICADB-BULK-LOAD-ACTION.md)
+<img align="center" src="plugin-vertica-bulk-load.png"  width="400" alt="plugin configuration" />
+
+Usage Notes
+-----------
+
+This plugin can be configured to read all the contenets for multiple files in a directory and bulk load into vertica table. This plugin provides option to commit after every file written to vertica table. 
+
+If Basic level of Copy statement is selected, table name and delimiter should be provided. With Advanced option selected, table name and delimiter fileds will not have any effect.
+
+Plugin Configuration
+---------------------
+
+| Configuration | Required | Default | Description |
+| :------------ | :------: | :----- | :---------- |
+| **Username** | **N** | N/A | This configuration specifies user identity for connecting to the specified database. Required for databases that need authentication. Optional for databases that do not require authentication. |
+| **Password** | **N** | N/A | Specifies password to use to connect to the specified database. Required for databases that need authentication. Optional for databases that do not require authentication. |
+| **File Path** | **Y** | N/A | Specifies directory or file path which needs to be loaded to database. |
+| **Copy Statement level** | **Y** | Basic| This configuration specifies Copy statement level used by the plugin. If Basic is selected, copy statement will be generated automatically. Advanced option takes whole copy statement. |
+| **Auto commit after each file?** | **Y** | false | This configuration specifies if commit needs to happen after every file from the directory or not. If specified false, commit will be applied after all the files are loaded. If specified true, it will be applied after each file. |
+| **Vertica Table name** | **N** | N/A | This configuration provides vertica table name to which data will be loaded. Table in vertica must exist. Only works with Basic Copy Statement Level. |
+| **Delimiter for the input file** | **N** | , | Specifies delimiter in the input file. Only works with Basic Copy Statement Level. |
+| **Copy Statement** | **N** | N/A | Specifies copy statement for vertica bulk load. Only works with Advanced Copy Statement level. |
+| **Connection String** | **Y** | N/A | JDBC connection string including database name. |
 
 Build
 -----
