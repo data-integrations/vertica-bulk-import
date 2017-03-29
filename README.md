@@ -14,6 +14,8 @@ This plugin can be configured to read all the contenets for multiple files in a 
 
 If Basic level of Copy statement is selected, table name and delimiter should be provided. With Advanced option selected, table name and delimiter fileds will not have any effect.
 
+This plugin also emits metrics "num.of.rows.rejected"" for number of rows successfully created and "num.of.rows.inserted" number of rows rejected. 
+
 Plugin Configuration
 ---------------------
 
