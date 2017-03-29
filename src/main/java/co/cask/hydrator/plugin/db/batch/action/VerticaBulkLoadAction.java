@@ -21,6 +21,7 @@ import co.cask.cdap.api.annotation.Macro;
 import co.cask.cdap.api.annotation.Name;
 import co.cask.cdap.api.annotation.Plugin;
 import co.cask.cdap.api.plugin.PluginConfig;
+import co.cask.cdap.etl.api.PipelineConfigurer;
 import co.cask.cdap.etl.api.action.Action;
 import co.cask.cdap.etl.api.action.ActionContext;
 import com.google.common.base.Preconditions;
@@ -36,6 +37,7 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -61,11 +63,16 @@ public class VerticaBulkLoadAction extends Action {
   }
 
   @Override
-  public void run(ActionContext context) throws Exception {
-    DriverManager.registerDriver((Driver) Class.forName("com.vertica.jdbc.Driver").newInstance());
-    String copyStatement;
+  public void configurePipeline(PipelineConfigurer pipelineConfigurer) throws IllegalArgumentException {
+    validateInputs();
+  }
 
-    if(config.level.equalsIgnoreCase("basic")) {
+  private void validateInputs() {
+    Preconditions.checkArgument(!(config.user == null && config.password != null),
+                                "user is null. Please provide both user name and password if database requires " +
+                                  "authentication. If not, please remove password and retry.");
+
+    if (config.level.equalsIgnoreCase("basic")) {
       if (Strings.isNullOrEmpty(config.tableName)) {
         throw new IllegalArgumentException("Table name must be provided in basic level for Vertica Bulk load");
       }
@@ -73,21 +80,32 @@ public class VerticaBulkLoadAction extends Action {
       if (Strings.isNullOrEmpty(config.delimiter)) {
         throw new IllegalArgumentException("Delimiter must be provided in basic level for Vertica Bulk load");
       }
-
-      Preconditions.checkArgument(
-        tableExists(config.tableName),
-        "Table %s does not exist. Please check that the 'tableName' property " +
-          "has been set correctly, and that the connection string %s points to a valid database.",
-        config.tableName, config.connectionString);
-
-      // COPY tableName FROM STDIN DELIMITER 'delimiter'
-      copyStatement = String.format("COPY %s FROM STDIN DELIMITER '%s'", config.tableName, config.delimiter);
-
     } else {
       if (Strings.isNullOrEmpty(config.copyStatement)) {
         throw new IllegalArgumentException("Copy statement can not be null or empty for Advanced level. Please check " +
-                                             "copyStatement propery");
+                                             "copyStatement property");
       }
+    }
+  }
+
+
+  @Override
+  public void run(ActionContext context) throws Exception {
+    Object driver = Class.forName("com.vertica.jdbc.Driver").newInstance();
+    DriverManager.registerDriver((Driver) driver);
+
+    Preconditions.checkArgument(
+      tableExists(config.tableName),
+      "Table %s does not exist. Please check that the 'tableName' property " +
+        "has been set correctly, and that the connection string %s points to a valid database.",
+      config.tableName, config.connectionString);
+
+    String copyStatement;
+
+    if (config.level.equalsIgnoreCase("basic")) {
+      // COPY tableName FROM STDIN DELIMITER 'delimiter'
+      copyStatement = String.format("COPY %s FROM STDIN DELIMITER '%s'", config.tableName, config.delimiter);
+    } else {
       copyStatement = config.copyStatement;
     }
 
@@ -107,9 +125,19 @@ public class VerticaBulkLoadAction extends Action {
         FileSystem fs = FileSystem.get(new Configuration());
 
         List<String> fileList = new ArrayList<>();
-        FileStatus[] fileStatus = fs.listStatus(new Path(config.path));
-        for (FileStatus fileStat : fileStatus) {
-          fileList.add(fileStat.getPath().toString());
+        FileStatus[] fileStatus;
+        try {
+          fileStatus = fs.listStatus(new Path(config.path));
+          for (FileStatus fileStat : fileStatus) {
+            fileList.add(fileStat.getPath().toString());
+          }
+        } catch (FileNotFoundException e) {
+          throw new IllegalArgumentException(String.format(
+            String.format("Path %s not found on file system. Please provide correct path.", config.path), e));
+        }
+
+        if (fileStatus.length <= 0) {
+          LOG.warn("No files available to load into vertica database");
         }
 
         for (String file : fileList) {
@@ -136,6 +164,10 @@ public class VerticaBulkLoadAction extends Action {
           // The size of the list gives you the number of rejected rows.
           int numRejects = rejects.size();
           totalRejects += numRejects;
+          if (config.autoCommit.equalsIgnoreCase("true")) {
+            // Commit the loaded data
+            connection.commit();
+          }
         }
 
         // Finish closes the COPY command. It returns the number of
@@ -149,7 +181,9 @@ public class VerticaBulkLoadAction extends Action {
         connection.commit();
       }
     } catch (Exception e) {
-      LOG.error("Error running query {}.", copyStatement, e);
+      throw new RuntimeException(String.format("Exception while running copy statement %s", copyStatement), e);
+    } finally {
+      DriverManager.deregisterDriver((Driver) driver);
     }
   }
 
@@ -165,6 +199,7 @@ public class VerticaBulkLoadAction extends Action {
     public static final String LEVEL = "level";
     public static final String TABLE = "tableName";
     public static final String DELIMITER = "delimiter";
+    public static final String AUTO_COMMIT = "autoCommit";
 
     @Name(CONNECTION_STRING)
     @Description("JDBC connection string including database name.")
@@ -215,6 +250,11 @@ public class VerticaBulkLoadAction extends Action {
     @Description("File directory path from where all the file need to be loaded to vertica.")
     @Macro
     public String path;
+
+    @Name(AUTO_COMMIT)
+    @Description("Auto commit after every file? Or commit after all the files are loaded? If selected true, commit is" +
+      " applied for every file.")
+    public String autoCommit;
 
     public VerticaConfig(String connectionString, String user, String password, String level, String tableName,
                          String delimiter, String copyStatement, String path) {

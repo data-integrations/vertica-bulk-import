@@ -18,13 +18,63 @@
         },
         {
           "widget-type": "textbox",
-          "label": "Copy Statement",
-          "name": "copyStatement"
+          "label": "File Path",
+          "name": "path"
+        },
+        {
+          "widget-type": "select",
+          "label": "Copy Statement level",
+          "name": "level",
+          "widget-attributes": {
+            "values": [
+              "Basic",
+              "Advanced"
+            ],
+            "default": "Basic"
+          }
+        },
+        {
+          "widget-type": "select",
+          "label": "Auto commit after each file?",
+          "name": "autoCommit",
+          "widget-attributes": {
+            "values": [
+              "true",
+              "false"
+            ],
+            "default": "false"
+          }
+        }
+      ]
+    },
+    {
+      "label": "Generate Basic Copy statement",
+      "properties": [
+        {
+          "widget-type": "textbox",
+          "label": "Vertica Table name",
+          "name": "tableName"
         },
         {
           "widget-type": "textbox",
-          "label": "File Path",
-          "name": "path"
+          "label": "Delimiter for the input file",
+          "name": "delimiter",
+          "widget-attributes": {
+            "default": ","
+          }
+        }
+      ]
+    },
+    {
+      "label": "Advanced Copy Statement",
+      "properties": [
+        {
+          "widget-type": "textbox",
+          "label": "Copy Statement",
+          "name": "copyStatement",
+          "widget-attributes": {
+            "placeholder": "COPY tableName FROM STDIN DELIMITER ',' DIRECT ENFORCELENGTH"
+          }
         }
       ]
     },
@@ -34,7 +84,10 @@
         {
           "widget-type": "textbox",
           "label": "Connection String",
-          "name": "connectionString"
+          "name": "connectionString",
+          "widget-attributes": {
+            "placeholder": "jdbc:vertica://localhost:5433/test"
+          }
         }
       ]
     }
