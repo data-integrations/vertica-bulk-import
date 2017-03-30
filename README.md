@@ -26,7 +26,7 @@ Plugin Configuration
 Usage Notes
 -----------
 
-The plugin can be configured to a read single file or multiple files from a configured HDFS directory and bulk load it into a Vertica table. The plugin uses the capabilities of Vertica to load the data from HDFS into Vertica. The command to load are issued through a Vertica JDBC driver. So, in order for this plugin to work, you are required to have loaded the Vertica JDBC driver through CDAP interfaces. 
+The plugin can be configured to a read single file or multiple files from a configured HDFS directory and bulk load it into a Vertica table. The plugin uses the capabilities of Vertica to load the data from HDFS into Vertica. The command to load are issued through a Vertica JDBC driver. Vertica's java api `VerticaCopyStream` is then used to write contents of the file as stdin `stream` to vertica table. 
 
 For every load, the plugin starts up a transactions and the transaction is committed only when all the files have been successfully loaded into Vertica. In case of any failures while loading, the transaction is aborted. It's important to note that this will increase the load throughput, but in case of any issues it will rollback the complete fileset. Hence, the plugin provides the ability to commit transaction after every file being loaded into Vertica.
 
