@@ -18,7 +18,7 @@ Plugin Configuration
 | **Copy Statement level** | **Y** | Basic| This configuration specifies Copy statement level used by the plugin. If Basic is selected, copy statement will be generated automatically. Advanced option takes whole copy statement. |
 | **Auto commit after each file?** | **Y** | false | This configuration specifies if commit needs to happen after every file from the directory or not. If specified false, commit will be applied after all the files are loaded. If specified true, it will be applied after each file. |
 | **Vertica Table name** | **N** | N/A | This configuration provides vertica table name to which data will be loaded. Table in vertica must exist. Only works with Basic Copy Statement Level. |
-| **Delimiter for the input file** | **N** | , | Specifies delimiter in the input file. Only works with Basic Copy Statement Level. |
+| **Delimiter for the input file** | **N** | , (comma) | Specifies delimiter in the input file. Only works with Basic Copy Statement Level. |
 | **Copy Statement** | **N** | N/A | Specifies copy statement for vertica bulk load. Only works with Advanced Copy Statement level. |
 | **Connection String** | **Y** | N/A | JDBC connection string including database name. |
 
