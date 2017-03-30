@@ -3,7 +3,7 @@
 
 Description
 -----------
-Action that  that bulk loads into vertica.
+Action that bulk loads all the files from a given directory into vertica table.
 
 
 Use Case
