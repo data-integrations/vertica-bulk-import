@@ -26,11 +26,11 @@ Plugin Configuration
 Usage Notes
 -----------
 
-The plugin can be configured to read single file or multiple files from a HDFS directory and bulk load into vertica table. The plugin uses the capabilities of Vertica to load the data from HDFS into Vertica. 
+The plugin can be configured to a read single file or multiple files from a configured HDFS directory and bulk load it into a Vertica table. The plugin uses the capabilities of Vertica to load the data from HDFS into Vertica. The command to load are issued through a Vertica JDBC driver. So, in order for this plugin to work, you are required to have loaded the Vertica JDBC driver through CDAP interfaces. 
 
-For every load, the plugin starts up a transactions and the transaction is committed only when all the files have been successfully loaded in to Vertica. In case of any failure while loading, the transaction is aborted. It's important to note that this will increase the load throughput, but in case of any issues it will rollback the complete fileset. Hence, the plugin provides the ability to commit transaction after every file being loaded into Vertica.
+For every load, the plugin starts up a transactions and the transaction is committed only when all the files have been successfully loaded into Vertica. In case of any failures while loading, the transaction is aborted. It's important to note that this will increase the load throughput, but in case of any issues it will rollback the complete fileset. Hence, the plugin provides the ability to commit transaction after every file being loaded into Vertica.
 
-Plugin provides two different ways for loading in bulk to Vertica -- first uses a standard simple approach of loading in delimiter separated files to be loaded in, while the advanced option allows you to specify the ```COPY``` query to load the data. This advanced option should be should when you need to specify advanced optimizations for loading data.
+Plugin provides two different ways for loading in bulk to Vertica -- first uses a standard simple approach for loading in delimiter separated files, while the advanced option allows you to specify the ```COPY``` query to load the data. More information about Vertica ```COPY``` command can be found [here](https://my.vertica.com/docs/7.1.x/HTML/Content/Authoring/AdministratorsGuide/BulkLoadCOPY/BulkLoadingData.htm). This advanced option should be used when you need advanced optimizations.
 
 This plugin emits metrics ```num.of.rows.rejected``` for number of rows successfully loaded and ```num.of.rows.inserted``` number of rows rejected by Vertica bulk load.. 
 
