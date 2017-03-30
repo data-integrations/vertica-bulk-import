@@ -55,7 +55,7 @@ For example, if your artifact is named 'vertica-bulk-load-<version>':
 
     > load artifact target/vertica-bulk-load-<version>.jar config-file target/vertica-bulk-load-<version>.json
     
-## Mailing Lists
+# Mailing Lists
 
 CDAP User Group and Development Discussions:
 
@@ -66,12 +66,7 @@ applications or building plugins for appplications. You can expect questions fro
 users, release announcements, and any other discussions that we think will be helpful 
 to the users.
 
-## IRC Channel
-
-CDAP IRC Channel: #cdap on irc.freenode.net
-
-
-## License and Trademarks
+# License and Trademarks
 
 Copyright © 2017 Cask Data, Inc.
 
