@@ -52,13 +52,13 @@ import javax.annotation.Nullable;
  * Runs a query after a pipeline run.
  */
 @Plugin(type = Action.PLUGIN_TYPE)
-@Name("VerticaBulkLoadAction")
+@Name("VerticaBulkImportAction")
 @Description("Vertica bulk load plugin")
-public class VerticaBulkLoadAction extends Action {
-  private static final Logger LOG = LoggerFactory.getLogger(VerticaBulkLoadAction.class);
+public class VerticaBulkImportAction extends Action {
+  private static final Logger LOG = LoggerFactory.getLogger(VerticaBulkImportAction.class);
   private final VerticaConfig config;
 
-  public VerticaBulkLoadAction(VerticaConfig config) {
+  public VerticaBulkImportAction(VerticaConfig config) {
     this.config = config;
   }
 

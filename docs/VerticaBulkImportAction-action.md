@@ -1,14 +1,14 @@
-# VerticaBulkLoadAction Action
+# VerticaBulkImportAction Action
 
 
 Description
 -----------
-Action that bulk loads all the files from a given directory into vertica table.
+Action that exports all the data in vertica table into a file on hdfs.
 
 
 Use Case
 --------
-The action can be used to bulk load data into vertica database.
+The action that exports all the data in vertica table into a file on hdfs.
 
 
 Properties
@@ -44,19 +44,19 @@ it will connect to the 'test' database of a vertica instance running on 'localho
 contents of all the files under /tmp/vertica/ directory to providede table. This plugin will generate
 COPY testTable FROM STDIN DELIMITER ',' copy statement automatically.
 
-{
-	"name": "VerticaBulkLoadAction",
-	"plugin": {
-		"name": "VerticaBulkLoadAction",
-		"type": "action",
-		"properties": {
-			"level": "Basic",
-			"user": "user123",
-			"password": "password-abc",
-			"path": "file:///tmp/vertica/",
-			"tableName": "testTable",
-			"delimiter": ",",
-			"connectionString": "jdbc:vertica://localhost:5433/test"
-		}
-	}
-}
+    {
+        "name": "VerticaBulkImportAction",
+        "plugin": {
+            "name": "VerticaBulkImportAction",
+            "type": "action",
+            "properties": {
+                "level": "Basic",
+                "user": "user123",
+                "password": "password-abc",
+                "path": "file:///tmp/vertica/",
+                "tableName": "testTable",
+                "delimiter": ",",
+                "connectionString": "jdbc:vertica://localhost:5433/test"
+            }
+        }
+    }
