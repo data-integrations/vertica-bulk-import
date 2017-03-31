@@ -3,13 +3,12 @@
 
 Description
 -----------
-Vertica Bulk Load Action plugin gets executed after successful mapreduce or spark job. It reads all the files in a given directory and bulk loads all the data from those files into vertica table.
+Bulk import contents of multiple files into vertica table.
 
 
 Use Case
 --------
-
-Bulk load multiple files into vertica table.
+Vertica Bulk Import Action plugin gets executed after successful mapreduce or spark job. It reads all the files in a given directory and bulk imports contents of those files into vertica table.
 
 Properties
 ----------
