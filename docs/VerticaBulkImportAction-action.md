@@ -1,15 +1,14 @@
-# VerticaBulkLoadAction Action
+# VerticaBulkImport Action
 
 
 Description
 -----------
-Action that bulk loads all the files from a given directory into vertica table.
+Bulk import contents of multiple files into vertica table.
 
 
 Use Case
 --------
-The action can be used to bulk load data into vertica database.
-
+Vertica Bulk Import Action plugin gets executed after successful mapreduce or spark job. It reads all the files in a given directory and bulk imports contents of those files into vertica table.
 
 Properties
 ----------
@@ -44,19 +43,20 @@ it will connect to the 'test' database of a vertica instance running on 'localho
 contents of all the files under /tmp/vertica/ directory to providede table. This plugin will generate
 COPY testTable FROM STDIN DELIMITER ',' copy statement automatically.
 
-{
-	"name": "VerticaBulkLoadAction",
-	"plugin": {
-		"name": "VerticaBulkLoadAction",
-		"type": "action",
-		"properties": {
-			"level": "Basic",
-			"user": "user123",
-			"password": "password-abc",
-			"path": "file:///tmp/vertica/",
-			"tableName": "testTable",
-			"delimiter": ",",
-			"connectionString": "jdbc:vertica://localhost:5433/test"
-		}
-	}
-}
+    {
+        "name": "VerticaBulkImportAction",
+        "plugin": {
+            "name": "VerticaBulkImportAction",
+            "type": "action",
+            "properties": {
+                "user": "user123",
+                "password": "password-abc",
+                "path": "file:///tmp/vertica/",
+                "level": "Basic",
+                "autoCommit": "false",
+                "tableName": "testTable",
+                "delimiter": ",",
+                "connectionString": "jdbc:vertica://localhost:5433/test"
+            }
+        }
+    }
