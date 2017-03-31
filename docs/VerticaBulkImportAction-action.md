@@ -3,13 +3,13 @@
 
 Description
 -----------
-The action can be used to bulk import data from HDFS files into vertica database.
+Vertica Bulk Load Action plugin gets executed after successful mapreduce or spark job. It reads all the files in a given directory and bulk loads all the data from those files into vertica table.
 
 
 Use Case
 --------
-The action can be used to bulk import data from HDFS files into vertica database.
 
+Bulk load multiple files into vertica table.
 
 Properties
 ----------
