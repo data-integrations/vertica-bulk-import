@@ -1,4 +1,4 @@
-# VerticaBulkImportAction Action
+# VerticaBulkImport Action
 
 
 Description
