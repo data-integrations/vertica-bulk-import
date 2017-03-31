@@ -3,12 +3,12 @@
 
 Description
 -----------
-The action can be used to bulk import data into vertica database.
+The action can be used to bulk import data from HDFS files into vertica database.
 
 
 Use Case
 --------
-The action can be used to bulk import data into vertica database.
+The action can be used to bulk import data from HDFS files into vertica database.
 
 
 Properties
@@ -50,10 +50,11 @@ COPY testTable FROM STDIN DELIMITER ',' copy statement automatically.
             "name": "VerticaBulkImportAction",
             "type": "action",
             "properties": {
-                "level": "Basic",
                 "user": "user123",
                 "password": "password-abc",
                 "path": "file:///tmp/vertica/",
+                "level": "Basic",
+                "autoCommit": "false",
                 "tableName": "testTable",
                 "delimiter": ",",
                 "connectionString": "jdbc:vertica://localhost:5433/test"
