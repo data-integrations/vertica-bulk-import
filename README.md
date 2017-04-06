@@ -1,7 +1,7 @@
 <a href="https://cdap-users.herokuapp.com/"><img alt="Join CDAP community" src="https://cdap-users.herokuapp.com/badge.svg?t=vertica-bulk-load"/></a> [![Build Status](https://travis-ci.org/hydrator/vertica-bulk-load.svg?branch=master)](https://travis-ci.org/hydrator/vertica-bulk-load) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) <img alt="CDAP Action" src="https://cdap-users.herokuapp.com/assets/cdap-action.svg"/> []() <img src="https://cdap-users.herokuapp.com/assets/cm-available.svg"/>
 
-Vertica Bulk Load
-=================
+Vertica Bulk Import
+===================
 
 Vertica Bulk Import Action plugin gets executed after successful mapreduce or spark job. It reads all the files in a given directory and bulk imports contents of those files into vertica table. 
 
