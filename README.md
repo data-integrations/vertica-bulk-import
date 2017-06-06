@@ -46,7 +46,7 @@ The build will create a .jar and .json file under the ``target`` directory.
 These files can be used to deploy your plugins.
 
 
-If you building this plugin for the first time, then do the following:
+If you are building this plugin for the first time, then do the following:
 
 ```
    mvn install:install-file -Dfile=lib/vertica-jdbc-8.0.1-0.jar -DgroupId=vertica -DartifactId=vertica-jdbc -Dversion=8.0.1 -Dpackaging=jar
