@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright © 2019 Cask Data, Inc.
+  ~ Copyright © 2019 CDAP
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not
   ~ use this file except in compliance with the License. You may obtain a copy of
@@ -19,9 +19,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>co.cask.hydrator</groupId>
+  <groupId>io.cdap.plugin</groupId>
   <artifactId>vertica-bulk-load</artifactId>
-  <version>1.0.2-8.0.1</version>
+  <version>1.1.0-8.0.1</version>
 
   <licenses>
     <license>
@@ -34,9 +34,9 @@
 
   <developers>
     <developer>
-      <name>Cask Data</name>
-      <email>cask-dev@googlegroups.com</email>
-      <organization>Cask Data, Inc.</organization>
+      <name>CDAP</name>
+      <email>cdap-dev@googlegroups.com</email>
+      <organization>CDAP</organization>
       <organizationUrl>http://www.cdap.io</organizationUrl>
     </developer>
   </developers>
@@ -55,8 +55,8 @@
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
     <site>
-      <id>cask</id>
-      <url>http://cask.co</url>
+      <id>cdap</id>
+      <url>http://cdap.io</url>
     </site>
   </distributionManagement>
 
@@ -73,31 +73,31 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <cdap.version>4.1.0</cdap.version>
+    <cdap.version>6.0.0-SNAPSHOT</cdap.version>
     <widgets.dir>widgets</widgets.dir>
     <docs.dir>docs</docs.dir>
     <!-- properties for script build step that creates the config files for the artifacts -->
-    <app.parents>system:cdap-etl-batch[4.1.0,5.0.0-SNAPSHOT),system:cdap-data-pipeline[4.1.0,5.0.0-SNAPSHOT),system:cdap-data-streams[4.1.0,5.0.0-SNAPSHOT)</app.parents>
+    <app.parents>system:cdap-data-pipeline[6.0.0-SNAPSHOT,7.0.0-SNAPSHOT),system:cdap-data-streams[6.0.0-SNAPSHOT,7.0.0-SNAPSHOT)</app.parents>
     <main.basedir>${project.basedir}</main.basedir>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>co.cask.cdap</groupId>
+      <groupId>io.cdap.cdap</groupId>
       <artifactId>cdap-etl-api</artifactId>
-      <version>5.1.2</version>
+      <version>6.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>co.cask.cdap</groupId>
+      <groupId>io.cdap.cdap</groupId>
       <artifactId>hydrator-test</artifactId>
-      <version>5.1.2</version>
+      <version>6.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>co.cask.cdap</groupId>
+      <groupId>io.cdap.cdap</groupId>
       <artifactId>cdap-data-pipeline</artifactId>
-      <version>5.1.2</version>
+      <version>6.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -106,7 +106,7 @@
       <version>8.0.1</version>
     </dependency>
     <dependency>
-      <groupId>co.cask.hydrator</groupId>
+      <groupId>io.cdap.plugin</groupId>
       <artifactId>hydrator-common</artifactId>
       <version>2.2.0-SNAPSHOT</version>
       <scope>provided</scope>
@@ -138,7 +138,7 @@
           <extensions>true</extensions>
           <configuration>
             <instructions>
-              <_exportcontents>co.cask.hydrator.plugin.*;org.apache.commons.lang;org.apache.commons.logging.*;
+              <_exportcontents>io.cdap.plugin.*;org.apache.commons.lang;org.apache.commons.logging.*;
                 org.codehaus.jackson.*; </_exportcontents>
               <Embed-Dependency>*;inline=false;scope=compile</Embed-Dependency>
               <Embed-Transitive>true</Embed-Transitive>
