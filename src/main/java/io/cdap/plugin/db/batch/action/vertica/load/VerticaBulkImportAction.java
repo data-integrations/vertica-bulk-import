@@ -14,21 +14,20 @@
  * the License.
  */
 
-package io.cdap.plugin.db.batch.action;
+package io.cdap.plugin.db.batch.action.vertica.load;
 
-import io.cdap.cdap.api.annotation.Description;
-import io.cdap.cdap.api.annotation.Macro;
-import io.cdap.cdap.api.annotation.Name;
-import io.cdap.cdap.api.annotation.Plugin;
-import io.cdap.cdap.api.plugin.PluginConfig;
-import io.cdap.cdap.etl.api.PipelineConfigurer;
-import io.cdap.cdap.etl.api.action.Action;
-import io.cdap.cdap.etl.api.action.ActionContext;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.vertica.jdbc.VerticaConnection;
 import com.vertica.jdbc.VerticaCopyStream;
+import io.cdap.cdap.api.annotation.Description;
+import io.cdap.cdap.api.annotation.Name;
+import io.cdap.cdap.api.annotation.Plugin;
+import io.cdap.cdap.etl.api.FailureCollector;
+import io.cdap.cdap.etl.api.PipelineConfigurer;
+import io.cdap.cdap.etl.api.StageConfigurer;
+import io.cdap.cdap.etl.api.action.Action;
+import io.cdap.cdap.etl.api.action.ActionContext;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -46,7 +45,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /**
  * Runs a query after a pipeline run.
@@ -56,63 +54,50 @@ import javax.annotation.Nullable;
 @Description("Vertica bulk load plugin")
 public class VerticaBulkImportAction extends Action {
   private static final Logger LOG = LoggerFactory.getLogger(VerticaBulkImportAction.class);
-  private final VerticaConfig config;
+  private final VerticaImportConfig config;
 
-  public VerticaBulkImportAction(VerticaConfig config) {
+  public VerticaBulkImportAction(VerticaImportConfig config) {
     this.config = config;
   }
 
   @Override
   public void configurePipeline(PipelineConfigurer pipelineConfigurer) throws IllegalArgumentException {
-    validateInputs();
+    super.configurePipeline(pipelineConfigurer);
+    StageConfigurer stageConfigurer = pipelineConfigurer.getStageConfigurer();
+    FailureCollector failureCollector = stageConfigurer.getFailureCollector();
+
+    config.validate(failureCollector);
   }
-
-  private void validateInputs() {
-    Preconditions.checkArgument(!(config.user == null && config.password != null),
-                                "user is null. Please provide both user name and password if database requires " +
-                                  "authentication. If not, please remove password and retry.");
-
-    if (config.level.equalsIgnoreCase("basic")) {
-      if (Strings.isNullOrEmpty(config.tableName)) {
-        throw new IllegalArgumentException("Table name must be provided in basic level for Vertica Bulk load");
-      }
-
-      if (Strings.isNullOrEmpty(config.delimiter)) {
-        throw new IllegalArgumentException("Delimiter must be provided in basic level for Vertica Bulk load");
-      }
-    } else {
-      if (Strings.isNullOrEmpty(config.copyStatement)) {
-        throw new IllegalArgumentException("Copy statement can not be null or empty for Advanced level. Please check " +
-                                             "copyStatement property");
-      }
-    }
-  }
-
 
   @Override
   public void run(ActionContext context) throws Exception {
+    FailureCollector failureCollector = context.getFailureCollector();
+    config.validate(failureCollector);
+    failureCollector.getOrThrowException();
+
     Object driver = Class.forName("com.vertica.jdbc.Driver").newInstance();
     DriverManager.registerDriver((Driver) driver);
 
     Preconditions.checkArgument(
-      tableExists(config.tableName),
+      tableExists(config.getTableName()),
       "Table %s does not exist. Please check that the 'tableName' property " +
         "has been set correctly, and that the connection string %s points to a valid database.",
-      config.tableName, config.connectionString);
+      config.getTableName(), config.getConnectionString());
 
     String copyStatement;
 
-    if (config.level.equalsIgnoreCase("basic")) {
+    if (config.getLevel().equalsIgnoreCase("basic")) {
       // COPY tableName FROM STDIN DELIMITER 'delimiter'
-      copyStatement = String.format("COPY %s FROM STDIN DELIMITER '%s'", config.tableName, config.delimiter);
+      copyStatement = String.format("COPY %s FROM STDIN DELIMITER '%s'", config.getTableName(), config.getDelimiter());
     } else {
-      copyStatement = config.copyStatement;
+      copyStatement = config.getCopyStatement();
     }
 
     LOG.debug("Copy statement is: {}", copyStatement);
 
     try {
-      try (Connection connection = DriverManager.getConnection(config.connectionString, config.user, config.password)) {
+      try (Connection connection = DriverManager.getConnection(config.getConnectionString(), config.getUser(),
+                                                               config.getPassword())) {
         connection.setAutoCommit(false);
         // run Copy statement
         VerticaCopyStream stream = new VerticaCopyStream((VerticaConnection) connection, copyStatement);
@@ -127,13 +112,13 @@ public class VerticaBulkImportAction extends Action {
         List<String> fileList = new ArrayList<>();
         FileStatus[] fileStatus;
         try {
-          fileStatus = fs.listStatus(new Path(config.path));
+          fileStatus = fs.listStatus(new Path(config.getPath()));
           for (FileStatus fileStat : fileStatus) {
             fileList.add(fileStat.getPath().toString());
           }
         } catch (FileNotFoundException e) {
           throw new IllegalArgumentException(String.format(
-            String.format("Path %s not found on file system. Please provide correct path.", config.path), e));
+            String.format("Path %s not found on file system. Please provide correct path.", config.getPath()), e));
         }
 
         if (fileStatus.length <= 0) {
@@ -164,7 +149,7 @@ public class VerticaBulkImportAction extends Action {
           // The size of the list gives you the number of rejected rows.
           int numRejects = rejects.size();
           totalRejects += numRejects;
-          if (config.autoCommit.equalsIgnoreCase("true")) {
+          if (config.getAutoCommit().equalsIgnoreCase("true")) {
             // Commit the loaded data
             connection.commit();
           }
@@ -187,95 +172,13 @@ public class VerticaBulkImportAction extends Action {
     }
   }
 
-  /**
-   * Vertica config
-   */
-  public class VerticaConfig extends PluginConfig {
-    public static final String CONNECTION_STRING = "connectionString";
-    public static final String USER = "user";
-    public static final String PASSWORD = "password";
-    public static final String COPYSTATEMENT = "copyStatement";
-    public static final String PATH = "path";
-    public static final String LEVEL = "level";
-    public static final String TABLE = "tableName";
-    public static final String DELIMITER = "delimiter";
-    public static final String AUTO_COMMIT = "autoCommit";
-
-    @Name(CONNECTION_STRING)
-    @Description("JDBC connection string including database name.")
-    @Macro
-    public String connectionString;
-
-    @Name(USER)
-    @Description("User to use to connect to the specified database. Required for databases that " +
-      "need authentication. Optional for databases that do not require authentication.")
-    @Nullable
-    @Macro
-    public String user;
-
-    @Name(PASSWORD)
-    @Description("Password to use to connect to the specified database. Required for databases that " +
-      "need authentication. Optional for databases that do not require authentication.")
-    @Nullable
-    @Macro
-    public String password;
-
-    @Name(LEVEL)
-    @Description("Copy statement query level. Basic automatically creates copy statement with tableName and delimiter. " +
-      "To use more options please choose Advanced option.")
-    @Macro
-    public String level;
-
-    @Name(TABLE)
-    @Description("Name of the vertica table where data will be bulk loaded.")
-    @Nullable
-    @Macro
-    public String tableName;
-
-    @Name(DELIMITER)
-    @Description("Delimiter in input files. Each delimited values will become columns in specified vertica table")
-    @Nullable
-    @Macro
-    public String delimiter;
-
-    @Name(COPYSTATEMENT)
-    @Description("Copy statement to bulk load into vertica. This query must use the COPY statement to load data from " +
-      "STDIN. Unlike copying from a file on the host, you do not need superuser privileges to copy a stream. All " +
-      "your user account needs is INSERT privileges on the target table.")
-    @Macro
-    @Nullable
-    public String copyStatement;
-
-    @Name(PATH)
-    @Description("File directory path from where all the file need to be loaded to vertica.")
-    @Macro
-    public String path;
-
-    @Name(AUTO_COMMIT)
-    @Description("Auto commit after every file? Or commit after all the files are loaded? If selected true, commit is" +
-      " applied for every file.")
-    public String autoCommit;
-
-    public VerticaConfig(String connectionString, String user, String password, String level, String tableName,
-                         String delimiter, String copyStatement, String path) {
-      this.connectionString = connectionString;
-      this.user = user;
-      this.password = password;
-      this.level = level;
-      this.tableName = tableName;
-      this.delimiter = delimiter;
-      this.copyStatement = copyStatement;
-      this.path = path;
-    }
-  }
-
   public boolean tableExists(String tableName) {
     Connection connection;
     try {
-      if (config.user == null) {
-        connection = DriverManager.getConnection(config.connectionString);
+      if (config.getUser() == null) {
+        connection = DriverManager.getConnection(config.getConnectionString());
       } else {
-        connection = DriverManager.getConnection(config.connectionString, config.user, config.password);
+        connection = DriverManager.getConnection(config.getConnectionString(), config.getUser(), config.getPassword());
       }
 
       try {
@@ -288,7 +191,7 @@ public class VerticaBulkImportAction extends Action {
       }
     } catch (SQLException e) {
       LOG.error("Exception while trying to check the existence of database table {} for connection {}.",
-                tableName, config.connectionString, e);
+                tableName, config.getConnectionString(), e);
       throw Throwables.propagate(e);
     }
   }
